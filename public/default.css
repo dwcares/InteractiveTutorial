@@ -1,0 +1,111 @@
+body {
+    overflow-y: auto;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+} 
+
+.playerHost {
+    overflow-y: auto;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+
+    height: 330px;
+}
+
+    .playerHost .azuremediaplayer {
+        border: none;
+    }
+
+    .playerHost .tutorialPane {
+        min-width: 200px;
+        width: 200px;
+        height: 100%;
+        
+        /*box-shadow: inset 5px 0 10px -2px #737889;*/
+        background-color: #e5e5e5;
+
+        border-top-right-radius: 5px;
+        border-bottom-right-radius: 5px;
+        
+
+        display: flex;
+        flex-direction: column;
+    }
+
+    .playerHost .tutorialPane .tutorialContent {
+        width: 100%;
+        overflow-y: auto;
+
+        font-family: Helvetica, 'Segoe UI', Ariel, sans-serif;
+        color: #737889;
+
+        font-size: 8pt;
+
+        position: relative;
+        flex: 1 auto;
+
+    }
+
+
+    .playerHost .tutorialPane .tutorialContent .tutorialSection {
+        margin: 5px 5px 5px 15px;
+    }
+
+    .playerHost .tutorialPane .tutorialContent .tutorialSection h3 {
+        margin: 10px 0px 5px 0px;
+    }
+
+    .playerHost .tutorialPane .tutorialContent .tutorialSection ul, .tutorialSection ol {
+        padding-left: 15px;
+        margin: 0px;
+    }
+
+    .playerHost .tutorialPane .tutorialContent .tutorialSection ol {
+        margin-bottom: 20px;
+    }
+
+    .playerHost .tutorialPane .tutorialContent .tutorialSection ol li {
+        margin-top: 10px;
+    }
+
+     .playerHost .tutorialPane h2.dockedSection{
+        flex: 0 auto;
+        /*width: 100%;*/
+        
+        font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegar', "Segoe UI Light", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
+        font-weight:200; 
+        font-size: 11pt;
+        margin: 0; 
+
+        padding: 5px 5px 5px 15px;
+        border-top-right-radius: 5px;
+
+        color: white;
+        background-color: #737889;
+    }
+
+    .playerHost .tutorialPane a.dockedSection{
+        flex: 0 auto;
+        font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegar', "Segoe UI Light", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
+        font-weight:200; 
+        font-size: 8pt;
+        margin: 0; 
+
+        padding: 5px 5px 5px 15px;
+        border-bottom-right-radius: 5px;
+
+        text-decoration: none;
+
+
+        color: #737889;
+        background-color: lightgray;
+    }
+
+    .playerHost .tutorialPane a.dockedSection:hover{
+        background-color: #737889;
+        color: white;
+    }
+
