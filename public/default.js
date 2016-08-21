@@ -1,6 +1,19 @@
 window.onload = function () {
     var videoData = {
-
+        size: [584, 330],
+        posterURL: "https://i.ytimg.com/vi_webp/Q4PwexJxiDM/sddefault.webp",
+        url: "https://testmakerskit.blob.core.windows.net/asset-a8ceb4c2-580f-4d27-8c2a-352bd1804ea5/makerskit-cocktail.mp4?sv=2012-02-12&sr=c&si=41a97b1d-5a63-41b9-ba60-035bc977a645&sig=1s6pHmQbAaA0GH0%2Bj%2BICgY1ScGIo%2BGZzOpNNM83PJs0%3D&st=2016-08-18T01%3A45%3A41Z&se=2116-08-18T01%3A45%3A41Z",
+        timestamps: [
+            {time: 0, title: "DIY Classic Cocktails", description: "Relaxing with a hard-to-find craft IPA or a glass of your favorite vintage is a great way to spend an evening, but there is something truly special about mixing a fabulous cocktail. Our cocktail bartending kit for adults makes mixing up your own favorite libations a breeze!",link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}},
+            {time: 23, title: "What you need", 
+                list: {title: "Tools", values:["Quart Sized Mason Jar Shaker", "Hardwood Muddler",  "Cocktail Stirrer Spoon", "Ice Tongs", "Stainless Steel Strainer", "Stainless Steel Jigger (1oz/1.5oz)", "2 Liquor Pour Spouts"]},link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}},
+            {time: 51, title: "Mojito", description: "A Mojito is a traditional Cuban highball. It has also often been said that Ernest Hemingway made the bar called La Bodeguita del Medio famous when he became one of its regulars and wrote 'My mojito in La Bodeguita, My daiquiri in El Floridita' on a wall of the bar. ",
+                list: {title: "Ingredients", values:["10 Mint Leaves",  "1/2 Lime", "Club Soda", "White Rum", "Sugar", "Ice"]},
+                orderedList: {title: "Steps", values:["In your glass, muddle mint leaves and sugar.","Fill the glass with ice, then add rum and lime juice.","Stir, then add club soda and club soda to taste."]}},
+            {time: 3*60+14, title: "Whiskey Sour", description: "The oldest historical mention of a whiskey sour was published in the Wisconsin newspaper, Waukesha Plain Dealer, in 1870",
+                list: {title: "Ingredients", values:["Bourbon whiskey",  "Fresh lemon juice", "Simple syrup", "Maraschino cherries ", "Lemon peel", "Ice"]},
+                orderedList: {title: "Steps", values:["Combine all ingredients in a cocktail shaker. If you don't have a cocktail shaker, use two tall glasses or screw-top glass jar will also do the trick.","Shake the drink for about 10 seconds to mix everything","Strain the ingredients into a glass. Garnish with maraschino cherries or a a lemon twist."]}}
+        ]
     }
 
     initVideo(videoData);

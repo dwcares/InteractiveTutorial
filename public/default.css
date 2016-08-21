@@ -11,6 +11,7 @@ body {
     flex-direction: row;
     align-items: center;
     justify-content: center;
+    overflow: hidden;
 
     height: 330px;
 }
@@ -19,12 +20,23 @@ body {
         border: none;
     }
 
+    .playerHost .azuremediaplayer .amp-moreoptions-control, .playerHost .azuremediaplayer .vjs-volume-menu-button{
+        display: none;
+    }
+
+    .playerHost .azuremediaplayer .vjs-control-bar{
+        height: 20px;
+    }
+
+    .playerHost .azuremediaplayer .vjs-play-control:before , .playerHost .azuremediaplayer .vjs-time-controls, .playerHost .azuremediaplayer .vjs-fullscreen-control:before {
+        font-size: 10px;
+    }
+
     .playerHost .tutorialPane {
         min-width: 200px;
         width: 200px;
         height: 100%;
         
-        /*box-shadow: inset 5px 0 10px -2px #737889;*/
         background-color: #e5e5e5;
 
         border-top-right-radius: 5px;
@@ -33,6 +45,15 @@ body {
 
         display: flex;
         flex-direction: column;
+
+        -webkit-touch-callout: none;
+        -webkit-user-select: none;
+        -khtml-user-select: none;
+        -moz-user-select: none;
+        -ms-user-select: none;
+        user-select: none;
+        cursor:default;
+
     }
 
     .playerHost .tutorialPane .tutorialContent {
@@ -94,6 +115,7 @@ body {
         font-size: 8pt;
         margin: 0; 
 
+        height: 15px;
         padding: 5px 5px 5px 15px;
         border-bottom-right-radius: 5px;
 
