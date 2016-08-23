@@ -2,17 +2,21 @@ window.onload = function () {
     var videoData = {
         size: [584, 330],
         posterURL: "https://i.ytimg.com/vi_webp/Q4PwexJxiDM/sddefault.webp",
+        link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"},
         url: "https://testmakerskit.blob.core.windows.net/asset-a8ceb4c2-580f-4d27-8c2a-352bd1804ea5/makerskit-cocktail.mp4?sv=2012-02-12&sr=c&si=41a97b1d-5a63-41b9-ba60-035bc977a645&sig=1s6pHmQbAaA0GH0%2Bj%2BICgY1ScGIo%2BGZzOpNNM83PJs0%3D&st=2016-08-18T01%3A45%3A41Z&se=2116-08-18T01%3A45%3A41Z",
         timestamps: [
-            {time: 0, title: "DIY Classic Cocktails", description: "Relaxing with a hard-to-find craft IPA or a glass of your favorite vintage is a great way to spend an evening, but there is something truly special about mixing a fabulous cocktail. Our cocktail bartending kit for adults makes mixing up your own favorite libations a breeze!",link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}},
+            {time: 0, title: "DIY Classic Cocktails", description: "Relaxing with a hard-to-find craft IPA or a glass of your favorite vintage is a great way to spend an evening, but there is something truly special about mixing a fabulous cocktail. Our cocktail bartending kit for adults makes mixing up your own favorite libations a breeze!",link: {label: "MakersKit: Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}},
             {time: 23, title: "What you need", 
-                list: {title: "Tools", values:["Quart Sized Mason Jar Shaker", "Hardwood Muddler",  "Cocktail Stirrer Spoon", "Ice Tongs", "Stainless Steel Strainer", "Stainless Steel Jigger (1oz/1.5oz)", "2 Liquor Pour Spouts"]},link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}},
+                list: {title: "Tools", values:["Quart Sized Mason Jar Shaker", "Hardwood Muddler",  "Cocktail Stirrer Spoon", "Ice Tongs", "Stainless Steel Strainer", "Stainless Steel Jigger (1oz/1.5oz)", "2 Liquor Pour Spouts"]}},
             {time: 51, title: "Mojito", description: "A Mojito is a traditional Cuban highball. It has also often been said that Ernest Hemingway made the bar called La Bodeguita del Medio famous when he became one of its regulars and wrote 'My mojito in La Bodeguita, My daiquiri in El Floridita' on a wall of the bar. ",
                 list: {title: "Ingredients", values:["10 Mint Leaves",  "1/2 Lime", "Club Soda", "White Rum", "Sugar", "Ice"]},
                 orderedList: {title: "Steps", values:["In your glass, muddle mint leaves and sugar.","Fill the glass with ice, then add rum and lime juice.","Stir, then add club soda and club soda to taste."]}},
             {time: 3*60+14, title: "Whiskey Sour", description: "The oldest historical mention of a whiskey sour was published in the Wisconsin newspaper, Waukesha Plain Dealer, in 1870",
                 list: {title: "Ingredients", values:["Bourbon whiskey",  "Fresh lemon juice", "Simple syrup", "Maraschino cherries ", "Lemon peel", "Ice"]},
-                orderedList: {title: "Steps", values:["Combine all ingredients in a cocktail shaker. If you don't have a cocktail shaker, use two tall glasses or screw-top glass jar will also do the trick.","Shake the drink for about 10 seconds to mix everything","Strain the ingredients into a glass. Garnish with maraschino cherries or a a lemon twist."]}}
+                orderedList: {title: "Steps", values:["Combine all ingredients in a cocktail shaker. If you don't have a cocktail shaker, use two tall glasses or screw-top glass jar will also do the trick.","Shake the drink for about 10 seconds to mix everything","Strain the ingredients into a glass. Garnish with maraschino cherries or a a lemon twist."]}},
+            {time: 5*60+38, title: "More Cocktail Ideas", link: {label: "MakersKit: Mason Jar Herb Garden", url: "https://makerskit.com/products/herbgardenset"}, orderedList: {title: "Tips", values:["Personalized shot glasses!", "Grow your own mint!"]}},
+            
+             {time: 6*60+25, title: "DIY Classic Cocktails", description: "Relaxing with a hard-to-find craft IPA or a glass of your favorite vintage is a great way to spend an evening, but there is something truly special about mixing a fabulous cocktail. Our cocktail bartending kit for adults makes mixing up your own favorite libations a breeze!",link: {label: "Classic Cocktail Kit", url: "https://makerskit.com/products/cocktails"}}
         ]
     }
 
@@ -39,15 +43,23 @@ function initVideo(videoData) {
         }
     }, function() {
           console.log('Ready to play');
+          var tutorialPane = document.querySelector('#tutorialPane');
+
           initTimestampEvents(this, timestampArray);
+          initChat();
 
           this.addEventListener('timestampchanged', function(e) {
             console.log(videoData.timestamps[e.updatedTimestampIndex].title);
-            renderTimestamp('tutorialPane', videoData.timestamps[e.updatedTimestampIndex]);
+            renderTimestamp(tutorialPane, videoData.timestamps[e.updatedTimestampIndex]);
           });
 
           this.addEventListener('ended', function() {
             console.log('Finished!');
+
+            setTimeout(function() {
+                this.currentTime(0);
+                this.play();
+            }, 5000);
         });
       });
     
@@ -82,18 +94,65 @@ function initTimestampEvents(player, timestamps) {
 
 }
 
-function renderTimestamp(elementId, timestamp) {
-    var hostElement = document.querySelector('#'+elementId);
-    hostElement.innerHTML="";
+/************* CHAT ******************/
 
-    var timestampHTML = document.createElement('div');
-    timestampHTML.classList.add("tutorialContent");
+function initChat() {
+    // setup my socket client
+    var socket = io();
+
+    var chat = document.querySelector(".chat");
+    var chatHeader = document.querySelector(".chatHeader");
+    var userCountElement = document.querySelector(".chatHeader .userCount");
+
+    chatHeader.onclick = function(e) {
+        if (chat.classList.contains("collapsed")) {
+            chat.classList.remove("collapsed");
+        } else {
+            chat.classList.add("collapsed");
+        }
+    };
+
+    // called when the server calls socket.broadcast('move')
+    socket.on('clientsChanged', function (msg) {
+
+        if (msg && msg > 1) {
+            userCountElement.innerText = msg;
+            userCountElement.classList.remove("hidden");
+        } else {
+            userCountElement.classList.add("hidden");
+        }
+
+    });
+
+}
+
+
+/************* RENDER THE PANE CONTENTS ******************/
+
+function renderTimestamp(hostElement, timestamp) {
+
+    if (hostElement.classList.contains("closedPane")) {
+        hostElement.classList.remove("closedPane");
+    }
 
     // Header title
-    var headerHTML = document.createElement("h2");
+    var headerHTML = hostElement.querySelector('.dockedHeader');
     headerHTML.innerText = timestamp.title;
-    headerHTML.classList.add("dockedSection");
-    hostElement.appendChild(headerHTML);
+
+    var linkHTML = hostElement.querySelector('a.dockedSection');
+    if (timestamp.link) {
+        linkHTML.classList.remove("hidden");
+        linkHTML.innerText = timestamp.link.label;
+        linkHTML.setAttribute("href", timestamp.link.url);
+        linkHTML.setAttribute("target", "_blank");
+    } else { 
+        linkHTML.classList.add("hidden");
+        linkHTML.innerText = "";
+        linkHTML.setAttribute("href", null);
+    }
+
+    var timestampHTML = hostElement.querySelector('.tutorialContent');
+    timestampHTML.innerHTML = "";
 
     var descriptionHTML = renderDescription(timestamp.description);
     if (descriptionHTML) timestampHTML.appendChild(descriptionHTML);
@@ -104,10 +163,7 @@ function renderTimestamp(elementId, timestamp) {
     var orderedListHTML = renderOrderedList(timestamp.orderedList);
     if (orderedListHTML) timestampHTML.appendChild(orderedListHTML);
 
-    hostElement.appendChild(timestampHTML);
-
-    var linkHTML = renderLink(timestamp.link);
-    if (linkHTML) hostElement.appendChild(linkHTML);
+    
     
 }
 

@@ -5,6 +5,10 @@ body {
     justify-content: center;
 } 
 
+.hidden {
+    opacity: 0;
+}
+
 .playerHost {
     overflow-y: auto;
     display: flex;
@@ -20,7 +24,7 @@ body {
         border: none;
     }
 
-    .playerHost .azuremediaplayer .amp-moreoptions-control, .playerHost .azuremediaplayer .vjs-volume-menu-button{
+    .playerHost .azuremediaplayer .amp-moreoptions-control, .playerHost .azuremediaplayer .vjs-volume-menu-button,.playerHost .azuremediaplayer .vjs-loading-spinner {
         display: none;
     }
 
@@ -39,9 +43,7 @@ body {
         
         background-color: #e5e5e5;
 
-        border-top-right-radius: 5px;
-        border-bottom-right-radius: 5px;
-        
+        border-top-right-radius: 5px;        
 
         display: flex;
         flex-direction: column;
@@ -54,6 +56,12 @@ body {
         user-select: none;
         cursor:default;
 
+
+        transition: transform 300ms ease-in-out, opacity 300ms ease-in-out 100ms;
+    }
+
+    .playerHost .tutorialPane.closedPane {
+        opacity: 0;
     }
 
     .playerHost .tutorialPane .tutorialContent {
@@ -66,13 +74,12 @@ body {
         font-size: 8pt;
 
         position: relative;
-        flex: 1 auto;
-
+        flex: 1 1 auto;
     }
-
 
     .playerHost .tutorialPane .tutorialContent .tutorialSection {
         margin: 5px 5px 5px 15px;
+        height: 100%;
     }
 
     .playerHost .tutorialPane .tutorialContent .tutorialSection h3 {
@@ -92,42 +99,180 @@ body {
         margin-top: 10px;
     }
 
-     .playerHost .tutorialPane h2.dockedSection{
-        flex: 0 auto;
-        /*width: 100%;*/
+    .playerHost .tutorialPane .dockedSection{
+        flex: 0 1 auto;
         
-        font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegar', "Segoe UI Light", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
+        font-family: "HelveticaNeue-Light", "HelveticaNeueLight", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegar', "Segoe UI Light", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
         font-weight:200; 
-        font-size: 11pt;
         margin: 0; 
+        font-size: 8pt;
+        height: 15px;
+        color: #737889;
+        background-color: lightgray;
+    }
 
-        padding: 5px 5px 5px 15px;
+    .playerHost .tutorialPane .dockedSection.chat{
+       height: 200px;
+
+        display: flex;
+        flex-direction: column;
+        border: 2px solid lightblue;
+        transition: height 300ms ease-in-out;
+
+        flex: 1 0 auto;
+
+    }
+
+    .playerHost .tutorialPane .dockedSection.collapsed.chat .chatHeader:hover {
+        background-color: lightblue;
+        opacity: 0.8;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat.collapsed {
+        transition: height 250ms ease-in-out;
+        height: 25px;
+        flex: 0 0 auto;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatHeader {
+        display: flex;
+        flex-direction: row;
+        justify-content: space-between;
+        align-items: center;
+        background-color: lightblue;
+        height: 30px;
+        transition: flex 250ms ease-in-out;
+
+        cursor:pointer;
+
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat.collapsed .chatHeader {
+        flex: 1 0 100%;
+        transition: flex 250ms ease-in-out;
+    }
+
+        .playerHost .tutorialPane .dockedSection.chat .chatHeader .headerLabel {
+            margin-left: 15px;
+          
+        }
+
+
+        .playerHost .tutorialPane .dockedSection.chat .chatHeader .userCount {
+            background-color: rgba(255, 255, 255, 0.4);
+            color: #737830;
+            border-radius: 2px;
+            min-width: 15px;
+            height: 15px;
+            text-align: center;
+
+            padding: 0 2px 0 2px;
+
+            margin: 2px;
+
+            transition: opacity 250ms ease-in;
+        }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody {
+        height: 100%;  
+        flex: 1 auto;
+        background-color: white;
+        display: flex; 
+        flex-direction: column;
+
+        overflow-y: auto;
+        padding-bottom: 10px;
+        border-bottom: 2px solid white;
+
+        transition: opacity 150ms ease-in-out 300ms;
+
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat.collapsed .chatBody {
+        opacity: 0;
+        transition: opacity 100ms ease-in-out;
+    }
+
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble {
+        max-width: 80%;    
+        min-width: 10%;   
+        background-color: lightgray;
+        align-self: flex-start;
+        border-radius: 5px;
+
+        margin: 10px 10px 0px 10px;
+        padding: 5px;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.mine {
+        background-color: lightblue;
+        align-self: flex-end;
+    }
+
+
+    .playerHost .tutorialPane .dockedSection.chat .chatInput {
+        height: 30px;
+        flex: 0 auto;
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        background-color: lightblue;
+
+        border-top: 1px solid lightblue;
+        width: 100%;
+
+        transition: translateY 200ms ease-in-out;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat.collapsed .chatInput  {
+        transform: translateY(50px);
+        transition: translateY 200ms ease-in-out 200ms;
+    }
+
+
+    .playerHost .tutorialPane .dockedSection.chat .chatInput input {
+      
+        margin-left: 3px;
+        margin-right: 1px;
+        border: none;        
+
+        color: #737889;
+        font-size: 7pt;
+        padding: 2px;
+    }
+    .playerHost .tutorialPane .dockedSection.chat .chatInput input:focus { 
+        outline: none;
+        background-color: white;
+     }
+
+
+     .playerHost .tutorialPane .dockedSection.dockedHeader{
         border-top-right-radius: 5px;
+        font-size: 11pt;
+        padding: 5px 5px 5px 15px;
+        font-weight: 100;
+        flex: 0 1 auto;
 
         color: white;
         background-color: #737889;
     }
 
     .playerHost .tutorialPane a.dockedSection{
-        flex: 0 auto;
-        font-family: "HelveticaNeueLight", "HelveticaNeue-Light", "Helvetica Neue Light", "HelveticaNeue", "Helvetica Neue", 'TeXGyreHerosRegar', "Segoe UI Light", "Helvetica", "Tahoma", "Geneva", "Arial", sans-serif; 
-        font-weight:200; 
-        font-size: 8pt;
-        margin: 0; 
-
-        height: 15px;
-        padding: 5px 5px 5px 15px;
-        border-bottom-right-radius: 5px;
-
         text-decoration: none;
+        padding: 5px 5px 5px 15px;
+        flex: 0 1 auto;
+        transition: opacity 100ms ease-in-out;
+    }
 
-
-        color: #737889;
-        background-color: lightgray;
+       .playerHost .tutorialPane a.dockedSection{
+        text-decoration: none;
+        padding: 5px 5px 5px 15px;
+        flex: 0 1 0px;
     }
 
     .playerHost .tutorialPane a.dockedSection:hover{
-        background-color: #737889;
-        color: white;
+        background-color: lightblue;
+        opacity: 0.8;
     }
 
