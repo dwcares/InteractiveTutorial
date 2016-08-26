@@ -77,7 +77,7 @@ function initTimestampEvents(player, timestamps) {
     player.addEventListener('timeupdate', function(e) {            
         var cachedTimestampIndex = currentTimestampIndex;
 
-        for (var i =0; i< timestamps.length; i++) {
+        for (var i = 0; i< timestamps.length; i++) {
             if (this.currentTime() > timestamps[i])
                 currentTimestampIndex = i;
             else  
@@ -167,6 +167,8 @@ function initChat() {
         var chatElement = document.createElement("div");
         chatElement.classList.add("chatBubble");
 
+
+        // Add the user name label
         if (!isMe && lastIncomingUser !== message.username) {
             var chatLabel = document.createElement("div");
             chatLabel.innerText = message.username;
@@ -175,8 +177,11 @@ function initChat() {
 
             if (!typingMessage)
                 lastIncomingUser = message.username; // Don't show user name label if its the same user
+        } else if (isMe) {
+            lastIncomingUser = "";
         }
 
+        // Add the chat text
         var chatText = document.createElement("div");
         chatText.innerText = message.message;
         chatText.classList.add("chatBubbleContent");
