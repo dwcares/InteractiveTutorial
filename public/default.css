@@ -186,6 +186,8 @@ body {
 
         transition: opacity 150ms ease-in-out 300ms;
 
+         
+
     }
 
     .playerHost .tutorialPane .dockedSection.chat.collapsed .chatBody {
@@ -193,21 +195,59 @@ body {
         transition: opacity 100ms ease-in-out;
     }
 
-
-    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble {
-        max-width: 80%;    
-        min-width: 10%;   
-        background-color: lightgray;
-        align-self: flex-start;
-        border-radius: 5px;
-
-        margin: 10px 10px 0px 10px;
-        padding: 5px;
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubbleLabel {
+        font-size: 6pt;
+        margin-bottom: 2px;
     }
 
-    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.mine {
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubbleContent{
+        background-color: lightgray;
+
+        overflow: hidden;
+        text-overflow: ellipsis;
+
+        width: 100%;
+        padding: 5px;
+        border-radius: 5px;
+
+
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.mine .chatBubbleContent {
         background-color: lightblue;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble {
+       
+        align-self: flex-start;
+        max-width: 80%;    
+        min-width: 10%;   
+        margin: 10px 20px 0px 10px;
+
+
+        transition: opacity 600ms ease-in-out, transform 600ms ease-in-out;
+
+        flex: 0 0 auto;
+    }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.typingMessage  {
+        opacity: 0;
+        transform: translateX(-100px);
+
+    }
+
+     .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.typingMessage.showing, .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.mine.showing  {
+         opacity: 1;
+         transform: translateX(0px);
+        transition: opacity 600ms ease-in-out, transform 600ms ease-in-out;
+
+     }
+
+    .playerHost .tutorialPane .dockedSection.chat .chatBody .chatBubble.mine {
         align-self: flex-end;
+        opacity: 0;
+        transform: translateX(100px);
+
     }
 
 

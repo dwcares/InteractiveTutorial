@@ -25,6 +25,7 @@ window.onload = function () {
 
 function initVideo(videoData) {
     var timestampArray = videoData.timestamps.map(function(timestamp) {return timestamp.time});
+          initChat();
 
     var myPlayer = amp('tutorialPlayer', { /* Options */
         techOrder: ["azureHtml5JS", "html5", "flashSS", "silverlightSS"],
@@ -46,7 +47,6 @@ function initVideo(videoData) {
           var tutorialPane = document.querySelector('#tutorialPane');
 
           initTimestampEvents(this, timestampArray);
-          initChat();
 
           this.addEventListener('timestampchanged', function(e) {
             console.log(videoData.timestamps[e.updatedTimestampIndex].title);
@@ -103,6 +103,13 @@ function initChat() {
     var chat = document.querySelector(".chat");
     var chatHeader = document.querySelector(".chatHeader");
     var userCountElement = document.querySelector(".chatHeader .userCount");
+    var chatBody = chat.querySelector(".chatBody");
+    var chatInput = document.querySelector(".chatInput input");
+    var typing = false;
+    var lastIncomingUser = "";
+    var lastTypingTimer;
+    var TYPING_TIMER_LENGTH = 4000;
+    var username = Date.now();  
 
     chatHeader.onclick = function(e) {
         if (chat.classList.contains("collapsed")) {
@@ -112,7 +119,117 @@ function initChat() {
         }
     };
 
-    // called when the server calls socket.broadcast('move')
+    chatInput.oninput = function(e) {
+        
+        if (!typing) {
+            typing = true;
+            socket.emit("typing", {username: username});
+        } 
+
+        clearTimeout(lastTypingTimer);
+        lastTypingTimer = setTimeout(function () {
+            socket.emit('stop typing', {username: username});
+            typing = false;
+        }, TYPING_TIMER_LENGTH);
+    }
+
+    chatInput.onkeydown = function(e) {
+         if (event.which === 13) {
+            if (username) {
+                sendMessage();
+                socket.emit('stop typing', {username: username, commit:true});
+                typing = false;
+            }
+        } else if (event.which === 8 && (chatInput.value.length <= 1 || (chatInput.selectionEnd - chatInput.selectionStart >= chatInput.value.length))) {
+            if (username) {
+                socket.emit('stop typing', {username: username});
+                typing = false;
+                chatInput.value = "";
+                e.preventDefault();
+            }
+        }
+    }
+
+      function sendMessage () {
+            var message = chatInput.value;
+            if (message) {
+                addChatMessage({
+                    username: username,
+                    message: message
+                }, true);
+                
+                chatInput.value = "";
+                socket.emit('new message', {username: username, message: message});
+            }
+        }
+
+    function addChatMessage(message, isMe, typingMessage) {
+        var chatElement = document.createElement("div");
+        chatElement.classList.add("chatBubble");
+
+        if (!isMe && lastIncomingUser !== message.username) {
+            var chatLabel = document.createElement("div");
+            chatLabel.innerText = message.username;
+            chatLabel.classList.add("chatBubbleLabel");
+            chatElement.appendChild(chatLabel);
+
+            if (!typingMessage)
+                lastIncomingUser = message.username; // Don't show user name label if its the same user
+        }
+
+        var chatText = document.createElement("div");
+        chatText.innerText = message.message;
+        chatText.classList.add("chatBubbleContent");
+        chatElement.appendChild(chatText);
+
+        if (typingMessage) {
+            chatElement.classList.add("typingMessage");
+        } 
+
+        if (isMe) { 
+            chatElement.classList.add("mine"); 
+        } else {
+            chatElement.classList.add("user-"+message.username);
+        }
+
+        chatBody.appendChild(chatElement);
+
+        setTimeout(function() {
+            chatElement.classList.add("showing");
+            chatBody.scrollTop = chatBody.scrollHeight;
+        }, 100);
+    }
+
+    socket.on('new message', function(msg) {
+        addChatMessage(msg, false);
+    });
+
+    socket.on('typing', function(msg) {
+        addChatMessage({message: "...", username: msg.username}, false, true);
+    });
+
+    socket.on('stop typing', function(msg) {
+        removeTypingBubble(msg.username, msg.commit)
+    });
+
+    function removeTypingBubble(username, commit) {
+        var typingMessages = document.querySelectorAll(".typingMessage.user-"+username);
+
+        for (var i = 0; i<(typingMessages.length); i++) {
+            if (commit) {
+                typingMessages[i].style.display = "none";
+            } else {
+                typingMessages[i].classList.remove("showing");
+            }
+        }
+
+        setTimeout(function() {
+            for (var i = 0; i<(typingMessages.length); i++) {
+                chatBody.removeChild(typingMessages[i]);                
+            }
+        }, 300);
+    }
+
     socket.on('clientsChanged', function (msg) {
 
         if (msg && msg > 1) {
@@ -121,7 +238,6 @@ function initChat() {
         } else {
             userCountElement.classList.add("hidden");
         }
-
     });
 
 }

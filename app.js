@@ -21,9 +21,22 @@ io.on('connection', function(socket) {
 
     io.emit("clientsChanged", numClients);
 
-    socket.on('message', function(msg) {
-        console.log('Got message from client: ' + msg);     
+    socket.on('new message', function (msg) {
+        console.log("New message: "+msg);
+        socket.broadcast.emit('new message', msg);
     });
+
+    socket.on('typing', function (msg) {
+        socket.broadcast.emit('typing', {
+        username: msg.username
+        });
+    });
+
+    socket.on('stop typing', function (msg) {
+        socket.broadcast.emit('stop typing', msg
+        );
+    });
+
 
     socket.on('disconnect', function(socket) {
         numClients--;
