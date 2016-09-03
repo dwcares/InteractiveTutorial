@@ -111,16 +111,20 @@ function initChat() {
     var lastTypingTimer;
     var TYPING_TIMER_LENGTH = 4000;
     var username = Date.now();  
+    var manualCollapse = false;
 
-    chatHeader.onclick = function(e) {
+    chatHeader.onclick = toggleChat;
+
+    function toggleChat() {
         if (chat.classList.contains("collapsed")) {
             chat.classList.remove("collapsed");
             chatInput.style.display = "inline";
             chatInput.focus();
         } else {
             chat.classList.add("collapsed");
+            manualCollapse = true;
         }
-    };
+    }
 
     chatInput.oninput = function(e) {
         
@@ -215,6 +219,12 @@ function initChat() {
     });
 
     socket.on('new message', function(msg) {
+        if (!manualCollapse && chat.classList.contains("collapsed")) {
+            toggleChat();
+        } else if (manualCollapse && chat.classList.contains("collapsed")) {
+            pulseUserCount();
+        }
+
         addChatMessage(msg, false);
     });
 
@@ -225,6 +235,16 @@ function initChat() {
     socket.on('stop typing', function(msg) {
         removeTypingBubble(msg.username, msg.commit)
     });
+
+    function pulseUserCount() {
+        if (!userCountElement.classList.contains("pulse")) {
+            userCountElement.classList.add("pulse");
+
+            setTimeout(function() {
+                userCountElement.classList.remove("pulse");
+            }, 1000);
+        } 
+    }
 
     function removeTypingBubble(username, commit) {
         var typingMessages = document.querySelectorAll(".typingMessage.user-"+username);
@@ -247,6 +267,7 @@ function initChat() {
     socket.on('clientsChanged', function (msg) {
 
         if (msg && msg > 1) {
+            chat.classList.remove("hidden");
             userCountElement.innerText = msg;
             userCountElement.classList.remove("hidden");
         } else {
