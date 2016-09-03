@@ -23,9 +23,11 @@ window.onload = function () {
     initVideo(videoData);
 };
 
+var currentTimestampIndex;
+
 function initVideo(videoData) {
     var timestampArray = videoData.timestamps.map(function(timestamp) {return timestamp.time});
-          initChat();
+    initChat(videoData);
 
     var myPlayer = amp('tutorialPlayer', { /* Options */
         techOrder: ["azureHtml5JS", "html5", "flashSS", "silverlightSS"],
@@ -49,17 +51,13 @@ function initVideo(videoData) {
           initTimestampEvents(this, timestampArray);
 
           this.addEventListener('timestampchanged', function(e) {
+            currentTimestampIndex = e.updatedTimestampIndex;
             console.log(videoData.timestamps[e.updatedTimestampIndex].title);
             renderTimestamp(tutorialPane, videoData.timestamps[e.updatedTimestampIndex]);
           });
 
           this.addEventListener('ended', function() {
             console.log('Finished!');
-
-            setTimeout(function() {
-                this.currentTime(0);
-                this.play();
-            }, 5000);
         });
       });
     
@@ -97,7 +95,7 @@ function initTimestampEvents(player, timestamps) {
 
 /************* CHAT ******************/
 
-function initChat() {
+function initChat(videoData) {
     // setup my socket client
     var socket = io();
 
@@ -107,7 +105,7 @@ function initChat() {
     var chatBody = chat.querySelector(".chatBody");
     var chatInput = document.querySelector(".chatInput input");
     var typing = false;
-    var lastIncomingUser = "";
+    var lastIncomingUser = {user: "", section: ""};
     var lastTypingTimer;
     var TYPING_TIMER_LENGTH = 4000;
     var username = Date.now();  
@@ -164,11 +162,12 @@ function initChat() {
             if (message) {
                 addChatMessage({
                     username: username,
-                    message: message
+                    message: message, 
+                    sectionIndex:  currentTimestampIndex
                 }, true);
                 
                 chatInput.value = "";
-                socket.emit('new message', {username: username, message: message});
+                socket.emit('new message', {username: username, message: message, sectionIndex: currentTimestampIndex});
             }
         }
 
@@ -178,14 +177,22 @@ function initChat() {
 
 
         // Add the user name label
-        if (!isMe && lastIncomingUser !== message.username) {
+        if (!isMe && (lastIncomingUser.user !== message.username || lastIncomingUser.section !== message.sectionIndex)) {
             var chatLabel = document.createElement("div");
             chatLabel.innerText = message.username;
             chatLabel.classList.add("chatBubbleLabel");
+            
+
+            if (!typingMessage) {
+                chatLabel.innerText += " (" + videoData.timestamps[message.sectionIndex].title + ")";
+            }
             chatElement.appendChild(chatLabel);
 
-            if (!typingMessage)
-                lastIncomingUser = message.username; // Don't show user name label if its the same user
+            if (!typingMessage) {
+                lastIncomingUser.user = message.username; // Don't show user name label if its the same user
+                lastIncomingUser.section = message.sectionIndex;
+            }
+
         } else if (isMe) {
             lastIncomingUser = "";
         }
