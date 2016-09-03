@@ -65,7 +65,8 @@ function initVideo(videoData) {
     
     myPlayer.src([{ 
         src: videoData.url, 
-        type: "application/vnd.ms-sstr+xml"
+        "type": "video/mp4",
+        "selected": true
     }]);
 }
 
@@ -114,6 +115,8 @@ function initChat() {
     chatHeader.onclick = function(e) {
         if (chat.classList.contains("collapsed")) {
             chat.classList.remove("collapsed");
+            chatInput.style.display = "inline";
+            chatInput.focus();
         } else {
             chat.classList.add("collapsed");
         }
@@ -131,6 +134,7 @@ function initChat() {
             socket.emit('stop typing', {username: username});
             typing = false;
         }, TYPING_TIMER_LENGTH);
+        return true;
     }
 
     chatInput.onkeydown = function(e) {
@@ -148,6 +152,7 @@ function initChat() {
                 e.preventDefault();
             }
         }
+        return true;
     }
 
       function sendMessage () {
@@ -203,7 +208,11 @@ function initChat() {
             chatElement.classList.add("showing");
             chatBody.scrollTop = chatBody.scrollHeight;
         }, 100);
-    }
+    };
+
+    socket.on('login', function(msg) {
+        username = msg;
+    });
 
     socket.on('new message', function(msg) {
         addChatMessage(msg, false);

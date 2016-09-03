@@ -48,16 +48,17 @@ body {
         display: flex;
         flex-direction: column;
 
-        -webkit-touch-callout: none;
+        transition: transform 300ms ease-in-out, opacity 300ms ease-in-out 100ms;
+    }
+
+    .playerHost .tutorialPane:not(input) {    
         -webkit-user-select: none;
         -khtml-user-select: none;
         -moz-user-select: none;
         -ms-user-select: none;
+        cursor: default;
+        -webkit-touch-callout: none;
         user-select: none;
-        cursor:default;
-
-
-        transition: transform 300ms ease-in-out, opacity 300ms ease-in-out 100ms;
     }
 
     .playerHost .tutorialPane.closedPane {
@@ -268,22 +269,22 @@ body {
     .playerHost .tutorialPane .dockedSection.chat.collapsed .chatInput  {
         transform: translateY(50px);
         transition: translateY 200ms ease-in-out 200ms;
+        user-select: text;
     }
 
 
     .playerHost .tutorialPane .dockedSection.chat .chatInput input {
       
-        margin-left: 3px;
+        margin-left: 1px;
         margin-right: 1px;
-        border: none;        
+        border: none;    
 
         color: #737889;
         font-size: 7pt;
-        padding: 2px;
+        padding: 5px;
     }
     .playerHost .tutorialPane .dockedSection.chat .chatInput input:focus { 
         outline: none;
-        background-color: white;
      }
 
 
@@ -292,7 +293,7 @@ body {
         font-size: 11pt;
         padding: 5px 5px 5px 15px;
         font-weight: 100;
-        flex: 0 1 auto;
+        flex: 0 0 auto;
 
         color: white;
         background-color: #737889;
@@ -305,14 +306,12 @@ body {
         transition: opacity 100ms ease-in-out;
     }
 
-       .playerHost .tutorialPane a.dockedSection{
-        text-decoration: none;
-        padding: 5px 5px 5px 15px;
-        flex: 0 1 0px;
-    }
-
     .playerHost .tutorialPane a.dockedSection:hover{
         background-color: lightblue;
         opacity: 0.8;
+    }
+
+      .playerHost .tutorialPane a.dockedSection.hidden{
+        display: none;
     }
 
