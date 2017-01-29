@@ -28,7 +28,7 @@ body {
         display: none;
     }
 
-    .playerHost .azuremediaplayer .vjs-control-bar{
+    .playerHost .azuremediaplayer .vjs-control-bar {
         height: 20px;
     }
 
@@ -201,6 +201,7 @@ body {
         flex-direction: column;
 
         overflow-y: auto;
+        overflow-x: hidden;
         padding-bottom: 10px;
         border-bottom: 2px solid white;
 
