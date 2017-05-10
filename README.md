@@ -1,6 +1,6 @@
 # Interactive Tutorial - Azure Media Services playback control for interactive tutorial playback
 
-![Interactive Tutorial Playback Example](https://microsoft.github.io/techcasestudies/images/2017-01-19-makerskit/makerskit-dynamic-content.gif)
+![Interactive Tutorial Playback Example](http://microsoft.github.io/techcasestudies/images/2017-01-19-makerskit/makerskit-dynamic-content.gif)
 
 This project demonstrates how to implement a real-time tutorial playback solution built on top of Azure Media Services and Azure Media Player using 
 
@@ -34,7 +34,7 @@ This project demonstrates how to implement a real-time tutorial playback solutio
 [Microsoft Tech Case Studies - MakersKit](https://microsoft.github.io/techcasestudies/azure%20app%20service/2017/03/09/makerskit.html)
 
 ### Demo Video ###
-[![MakersKit Demo Video Thumbnail]({{site.baseurl}}/images/2017-01-19-makerskit/makerskit-video-thumb.png)](https://channel9.msdn.com/Blogs/raw-tech/MakersKit-Interactive-Player)
+[![MakersKit Demo Video Thumbnail](http://microsoft.github.io/techcasestudies/images/2017-01-19-makerskit/makerskit-video-thumb.png)](https://channel9.msdn.com/Blogs/raw-tech/MakersKit-Interactive-Player)
 
 
 ## Contributors
