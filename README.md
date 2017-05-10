@@ -1,5 +1,6 @@
 # Interactive Tutorial - Azure Media Services playback control for interactive tutorial playback
 
+
 ![Interactive Tutorial Playback Example](http://microsoft.github.io/techcasestudies/images/2017-01-19-makerskit/makerskit-dynamic-content.gif)
 
 This project demonstrates how to implement a real-time tutorial playback solution built on top of Azure Media Services and Azure Media Player using 
